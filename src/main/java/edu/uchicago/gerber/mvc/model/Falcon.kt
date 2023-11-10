@@ -1,10 +1,13 @@
 package edu.uchicago.gerber.mvc.model
 
 import edu.uchicago.gerber.mvc.controller.CommandCenter
+import edu.uchicago.gerber.mvc.controller.Game
+import edu.uchicago.gerber.mvc.controller.Sound
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
+import java.awt.Point
 import java.awt.image.BufferedImage
 import java.util.*
 import kotlin.collections.HashMap
@@ -155,8 +158,28 @@ class Falcon : Sprite() {
 
 
      override fun remove(list: MutableList<Movable>) {
-         if (shield == 0) CommandCenter.initFalconAndDecrementFalconNum()
+         //The falcon is never actually removed from the game-space; instead we decrement numFalcons
+         //only execute the initFalconAndDecrementFalconNum() method if shield is down.
+         if (shield == 0) decrementFalconNumAndSpawn()
      }
+
+    fun decrementFalconNumAndSpawn() {
+        CommandCenter.numFalcons -= 1
+        if (CommandCenter.isGameOver()) return
+        Sound.playSound("shipspawn.wav")
+        showLevel = 0
+        maxSpeedAttained = false
+        nukeMeter = 0
+        radius = Falcon.MIN_RADIUS
+        shield = Falcon.SPAWN_INIT_VALUE
+        invisible = Falcon.SPAWN_INIT_VALUE / 4
+        //put falcon in the middle of the game-space
+        center = Point(Game.DIM.width / 2, Game.DIM.height / 2)
+        //random number 0-360 in steps of 9 (DEGREE_STEP)
+        orientation = Game.R.nextInt(40) * Falcon.DEGREE_STEP
+        deltaX = 0.0
+        deltaY = 0.0
+    }
 
 
 

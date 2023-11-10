@@ -37,9 +37,9 @@ object CommandCenter {
         level = 0
         score = 0
         paused = false
-        //set to one greater than number of falcons lives in your game as initFalconAndDecrementNum() also decrements
+        //set to one greater than number of falcons lives in your game as decrementFalconNumAndSpawn() also decrements
         numFalcons = 4
-        initFalconAndDecrementFalconNum()
+        falcon.decrementFalconNumAndSpawn()
         opsQueue.enqueue(falcon, GameOp.Action.ADD)
     }
 
@@ -50,23 +50,7 @@ object CommandCenter {
         }
     }
 
-     fun initFalconAndDecrementFalconNum() {
-        numFalcons -= 1
-        if (isGameOver()) return
-        Sound.playSound("shipspawn.wav")
-        falcon.showLevel = 0
-        falcon.maxSpeedAttained = false
-        falcon.nukeMeter = 0
-        falcon.radius = Falcon.MIN_RADIUS
-        falcon.shield = Falcon.SPAWN_INIT_VALUE
-        falcon.invisible = Falcon.SPAWN_INIT_VALUE / 4
-        //put falcon in the middle of the game-space
-        falcon.center = Point(Game.DIM.width / 2, Game.DIM.height / 2)
-        //random number 0-360 in steps of 9 (DEGREE_STEP)
-        falcon.orientation = Game.R.nextInt(40) * Falcon.DEGREE_STEP
-        falcon.deltaX = 0.0
-        falcon.deltaY = 0.0
-    }
+
 
      fun clearAll() {
         movDebris.clear()

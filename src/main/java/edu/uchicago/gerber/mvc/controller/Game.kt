@@ -155,10 +155,11 @@ class Game : Runnable, KeyListener {
         // mutating the movable linkedlists while iterating them above.
         while (!CommandCenter.opsQueue.isEmpty()) {
             val gameOp = CommandCenter.opsQueue.dequeue()
-            val mov = gameOp?.movable
-            val action = gameOp?.action
-            var list: MutableList<Movable>
 
+
+            //given team, determine which linked-list this object will be added-to or removed-from
+            var list: MutableList<Movable>
+            val mov = gameOp?.movable
             list = when (mov!!.myTeam()) {
                 Team.FOE -> CommandCenter.movFoes
                 Team.FRIEND -> CommandCenter.movFriends
@@ -166,9 +167,13 @@ class Game : Runnable, KeyListener {
                 Team.DEBRIS -> CommandCenter.movDebris
                 else -> CommandCenter.movDebris
             }
+
+            //pass the appropriate linked-list from above
+            //this block will execute the add() or remove() callbacks in the Movable models.
+            val action = gameOp.action
             if (action === GameOp.Action.ADD)
                 mov.add(list)
-            else
+            else //REMOVE
                 mov.remove(list)
         } //end while
     }
