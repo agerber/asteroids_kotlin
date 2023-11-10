@@ -1,11 +1,8 @@
 package edu.uchicago.gerber.mvc.controller
 
-import edu.uchicago.gerber.mvc.controller.Sound.playSound
 import edu.uchicago.gerber.mvc.model.*
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import edu.uchicago.gerber.mvc.view.GamePanel
-import edu.uchicago.gerber.mvc.model.Nuke
-import edu.uchicago.gerber.mvc.model.NukeFloater
 import java.awt.Dimension
 import java.awt.EventQueue
 import java.awt.Point
@@ -116,7 +113,7 @@ class Game : Runnable, KeyListener {
         var radFriend: Int
         var radFoe: Int
 
-        //This has order-of-growth of O(n^2), there is no way around this.
+        //This has order-of-growth of O(FOES * FRIENDS)
         for (movFriend in CommandCenter.movFriends) {
             for (movFoe in CommandCenter.movFoes) {
                 pntFriendCenter = movFriend.myCenter()
@@ -126,25 +123,15 @@ class Game : Runnable, KeyListener {
 
                 //detect collision
                 if (pntFriendCenter.distance(pntFoeCenter) < radFriend + radFoe) {
-                    //remove the friend (so long as he is not protected)
-                    if (!movFriend.isProtected()) {
-                        CommandCenter.opsQueue.enqueue(movFriend, GameOp.Action.REMOVE)
-                    }
-
-                    //remove the foe
+                    //enqueue the friend
+                    CommandCenter.opsQueue.enqueue(movFriend, GameOp.Action.REMOVE)
+                    //enqueue the foe
                     CommandCenter.opsQueue.enqueue(movFoe, GameOp.Action.REMOVE)
-                    if (movFoe is Brick) {
-                        CommandCenter.score = (CommandCenter.score + 1000)
-                        playSound("rock.wav")
-                    } else {
-                        CommandCenter.score = (CommandCenter.score + 10)
-                        playSound("kapow.wav")
-                    }
                 }
             } //end inner for
         } //end outer for
 
-        //check for collisions between falcon and floaters. Order of growth of O(n) where n is number of floaters
+        //check for collisions between falcon and floaters. Order of growth of O(FLOATERS)
         val pntFalCenter = CommandCenter.falcon.myCenter()
         val radFalcon = CommandCenter.falcon.myRadius()
         var pntFloaterCenter: Point
@@ -155,27 +142,9 @@ class Game : Runnable, KeyListener {
 
             //detect collision
             if (pntFalCenter.distance(pntFloaterCenter) < (radFalcon + radFloater)) {
-
-                val clazz: Class<out Movable?> = movFloater.javaClass
-                when (clazz.simpleName) {
-                    "ShieldFloater" -> {
-                        playSound("shieldup.wav")
-                        CommandCenter.falcon.shield = Falcon.MAX_SHIELD
-                    }
-
-                    "NewWallFloater" -> {
-                        playSound("wall.wav")
-                        buildWall()
-                    }
-
-                    "NukeFloater" -> {
-                        playSound("nuke-up.wav")
-                        CommandCenter.falcon.nukeMeter = Falcon.MAX_NUKE
-                    }
-                }
+                //enqueue the floater
                 CommandCenter.opsQueue.enqueue(movFloater, GameOp.Action.REMOVE)
-
-            } //end for
+            }
         }
         processGameOpsQueue()
     }//end meth
@@ -183,65 +152,30 @@ class Game : Runnable, KeyListener {
     private fun processGameOpsQueue() {
 
         //deferred mutation: these operations are done AFTER we have completed our collision detection to avoid
-        // mutating the movable linkedlists while iterating them above
+        // mutating the movable linkedlists while iterating them above.
         while (!CommandCenter.opsQueue.isEmpty()) {
             val gameOp = CommandCenter.opsQueue.dequeue()
             val mov = gameOp?.movable
             val action = gameOp?.action
-            if (mov != null) {
-                when (mov.myTeam()) {
-                    Team.FOE -> if (action == GameOp.Action.ADD) {
-                        CommandCenter.movFoes.add(mov)
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.movFoes.remove(mov)
-                        if (mov is Asteroid) spawnSmallerAsteroidsOrDebris(mov)
-                    }
+            var list: MutableList<Movable>
 
-                    Team.FRIEND -> if (action == GameOp.Action.ADD) {
-                        CommandCenter.movFriends.add(mov)
-                    } else { //GameOp.Operation.REMOVE
-                        if (mov is Falcon) {
-                            CommandCenter.initFalconAndDecrementFalconNum()
-                        } else {
-                            CommandCenter.movFriends.remove(mov)
-                        }
-                    }
-
-                    Team.FLOATER -> if (action == GameOp.Action.ADD) {
-                        CommandCenter.movFloaters.add(mov)
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.movFloaters.remove(mov)
-                    }
-
-                    Team.DEBRIS -> if (action == GameOp.Action.ADD) {
-                        CommandCenter.movDebris.add(mov)
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.movDebris.remove(mov)
-                    }
-                }
+            list = when (mov!!.myTeam()) {
+                Team.FOE -> CommandCenter.movFoes
+                Team.FRIEND -> CommandCenter.movFriends
+                Team.FLOATER -> CommandCenter.movFloaters
+                Team.DEBRIS -> CommandCenter.movDebris
+                else -> CommandCenter.movDebris
             }
-        }
+            if (action === GameOp.Action.ADD)
+                mov.add(list)
+            else
+                mov.remove(list)
+        } //end while
     }
 
-    //shows how to add walls or rectangular elements one brick at a time
-    private fun buildWall() {
-        val BRICK_SIZE = DIM.width / 30
-        val ROWS = 2
-        val COLS = 20
-        val X_OFFSET = BRICK_SIZE * 5
-        val Y_OFFSET = 50
-        for (nCol in 0 until COLS) {
-            for (nRow in 0 until ROWS) {
-                CommandCenter.opsQueue.enqueue(
-                    Brick(
-                        Point(nCol * BRICK_SIZE + X_OFFSET, nRow * BRICK_SIZE + Y_OFFSET),
-                        BRICK_SIZE
-                    ),
-                    GameOp.Action.ADD
-                )
-            }
-        }
-    }
+
+
+
     private fun checkFloaters() {
         spawnNewWallFloater()
         spawnShieldFloater()
@@ -287,20 +221,7 @@ class Game : Runnable, KeyListener {
         }
     }
 
-    private fun spawnSmallerAsteroidsOrDebris(originalAsteroid: Asteroid) {
-        var size = originalAsteroid.size
-        //small asteroids
-        if (size > 1) {
-            CommandCenter.opsQueue.enqueue(WhiteCloudDebris(originalAsteroid), GameOp.Action.ADD)
-        } else {
-            //for large (0) and medium (1) sized Asteroids only, spawn 2 or 3 smaller asteroids respectively
-            //We can use the existing variable (size) to do this
-            size += 2
-            while (size-- > 0) {
-                CommandCenter.opsQueue.enqueue(Asteroid(originalAsteroid), GameOp.Action.ADD)
-            }
-        }
-    }
+
 
     //if there are no more Asteroids on the screen
     fun isLevelClear(): Boolean {

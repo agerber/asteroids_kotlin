@@ -108,13 +108,6 @@ abstract class Sprite : Movable {
         return randomNumber
     }
 
-    //by default, sprites are not protected
-    override  fun isProtected(): Boolean {
-        return  false
-    }
-
-
-
     protected fun renderVector(g: Graphics) {
 
         g.color = color
@@ -206,6 +199,15 @@ abstract class Sprite : Movable {
             null
         }
         return img
+    }
+
+    //default behavior for adding and removing objects from game space
+    override fun add(list: MutableList<Movable>) {
+        list.add(this)
+    }
+
+   override fun remove(list: MutableList<Movable>) {
+        list.remove(this)
     }
 
 

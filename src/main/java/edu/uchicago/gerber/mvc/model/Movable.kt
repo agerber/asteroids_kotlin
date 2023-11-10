@@ -2,6 +2,7 @@ package edu.uchicago.gerber.mvc.model
 
 import java.awt.Graphics
 import java.awt.Point
+import java.util.*
 
 interface Movable {
     enum class Team {
@@ -17,5 +18,11 @@ interface Movable {
     fun myCenter(): Point
     fun myRadius(): Int
     fun myTeam(): Team
-    fun isProtected(): Boolean
+
+    //callbacks which occur before or after this object is added or removed from the game-space.
+    //this is your opportunity to add sounds or perform other side effects, before (add) or after (remove).
+    fun add(list: MutableList<Movable>)
+    fun remove(list: MutableList<Movable>)
+
+
 } //end Movable

@@ -1,10 +1,13 @@
 package edu.uchicago.gerber.mvc.model
 
+import edu.uchicago.gerber.mvc.controller.CommandCenter
+import edu.uchicago.gerber.mvc.controller.Sound
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.image.BufferedImage
+import java.util.*
 
 class Brick(upperLeftCorner: Point, size: Int) : Sprite() {
     companion object{
@@ -39,5 +42,12 @@ class Brick(upperLeftCorner: Point, size: Int) : Sprite() {
     //and gain slight performance
     override fun move() {
         //do NOT call super.move() and do nothing, a brick does not move.
+    }
+
+    override fun remove(list: MutableList<Movable>) {
+        super.remove(list)
+        CommandCenter.score = CommandCenter.score + 1000
+        Sound.playSound("rock.wav")
+
     }
 } //end class

@@ -1,9 +1,12 @@
 package edu.uchicago.gerber.mvc.model
 
+import edu.uchicago.gerber.mvc.controller.CommandCenter
+import edu.uchicago.gerber.mvc.controller.Sound
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import lombok.Data
 import java.awt.Color
 import java.awt.Graphics
+import java.util.*
 
 @Data
 class Nuke(falcon: Falcon) : Sprite() {
@@ -30,12 +33,6 @@ class Nuke(falcon: Falcon) : Sprite() {
         g.drawOval(center.x - radius, center.y - radius, radius * 2, radius * 2)
     }
 
-    //a nuke is invincible until it collides 10 times
-    override fun isProtected(): Boolean {
-        return true
-    }
-
-
 
     override fun move() {
         super.move()
@@ -50,5 +47,21 @@ class Nuke(falcon: Falcon) : Sprite() {
 
     companion object {
         private const val EXPIRE = 60
+    }
+
+    override fun add(list: MutableList<Movable>) {
+        if (CommandCenter.falcon.nukeMeter > 0){
+            list.add(this)
+            Sound.playSound("nuke.wav")
+            CommandCenter.falcon.nukeMeter = 0
+        }
+
+    }
+
+    override fun remove(list: MutableList<Movable>) {
+        super.remove(list)
+        //if getExpiry() > 0, then this remove was the result of a collision, rather than natural mortality
+        if (expiry == 0)  list.remove(this)
+
     }
 }

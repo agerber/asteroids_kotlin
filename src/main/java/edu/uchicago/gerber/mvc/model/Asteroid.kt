@@ -1,10 +1,13 @@
 package edu.uchicago.gerber.mvc.model
 
+import edu.uchicago.gerber.mvc.controller.CommandCenter
 import edu.uchicago.gerber.mvc.controller.Game
+import edu.uchicago.gerber.mvc.controller.Sound
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Point
+import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Supplier
 import java.util.stream.Collectors
@@ -99,6 +102,29 @@ class Asteroid(size: Int) : Sprite() {
     }
     override fun draw(g: Graphics) {
         renderVector(g)
+    }
+
+    override fun remove(list: MutableList<Movable>) {
+        super.remove(list)
+        spawnSmallerAsteroidsOrDebris(this)
+        CommandCenter.score = CommandCenter.score + 10L * (size + 1)
+        Sound.playSound("kapow.wav")
+
+    }
+
+    private fun spawnSmallerAsteroidsOrDebris(originalAsteroid: Asteroid) {
+        var size = originalAsteroid.size
+        //small asteroids
+        if (size > 1) {
+            CommandCenter.opsQueue.enqueue(WhiteCloudDebris(originalAsteroid), GameOp.Action.ADD)
+        } else {
+            //for large (0) and medium (1) sized Asteroids only, spawn 2 or 3 smaller asteroids respectively
+            //We can use the existing variable (size) to do this
+            size += 2
+            while (size-- > 0) {
+                CommandCenter.opsQueue.enqueue(Asteroid(originalAsteroid), GameOp.Action.ADD)
+            }
+        }
     }
 
 

@@ -1,13 +1,16 @@
 package edu.uchicago.gerber.mvc.model
 
+import edu.uchicago.gerber.mvc.controller.CommandCenter
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import java.util.*
+import kotlin.collections.HashMap
 
 
- class Falcon : Sprite() {
+class Falcon : Sprite() {
     // ==============================================================
     // FIELDS 
     // ==============================================================
@@ -62,10 +65,7 @@ import java.awt.image.BufferedImage
     }
 
 
-    override fun isProtected(): Boolean {
-        return shield > 0
 
-    }
 
     // ==============================================================
     // METHODS 
@@ -132,7 +132,7 @@ import java.awt.image.BufferedImage
         if (invisible > 0){
             imageState = ImageState.FALCON_INVISIBLE
         }
-        else if (isProtected()) {
+        else if (shield > 0) {
           imageState =  if (thrusting) ImageState.FALCON_PRO_THR else ImageState.FALCON_PRO
             //you can also combine vector elements and raster elements
             drawShield(g)
@@ -153,4 +153,11 @@ import java.awt.image.BufferedImage
      }
 
 
-}
+
+     override fun remove(list: MutableList<Movable>) {
+         if (shield == 0) CommandCenter.initFalconAndDecrementFalconNum()
+     }
+
+
+
+ }

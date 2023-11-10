@@ -1,5 +1,6 @@
 package edu.uchicago.gerber.mvc.model
 
+import edu.uchicago.gerber.mvc.controller.Sound
 import edu.uchicago.gerber.mvc.controller.Utils
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Color
@@ -50,6 +51,12 @@ class Bullet(falcon: Falcon) : Sprite() {
     override fun draw(g: Graphics) {
         //set the native color of the sprite
         renderVector(g)
+    }
+
+    override fun add(list: MutableList<Movable>) {
+        super.add(list)
+        Sound.playSound("thump.wav")
+
     }
 
 }

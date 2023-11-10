@@ -4,6 +4,7 @@ import edu.uchicago.gerber.mvc.controller.Game
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Point
+import java.util.*
 
 class Star: Movable {
 
@@ -41,7 +42,13 @@ class Star: Movable {
         return Movable.Team.DEBRIS
     }
 
-    override fun isProtected(): Boolean {
-        return false
+    override fun add(list: MutableList<Movable>) {
+        list.add(this)
     }
+
+    override  fun remove(list: MutableList<Movable>) {
+        list.remove(this)
+    }
+
+
 }
