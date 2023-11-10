@@ -39,9 +39,9 @@ class Nuke(falcon: Falcon) : Sprite() {
         if (expiry % (EXPIRE / 6) == 0) nukeState++
         radius = when (nukeState) {
             0 -> 2
-            1, 2, 3 -> radius + 16
-            4, 5 -> radius - 22
-            else -> radius - 22
+            1, 2, 3 -> radius + 8
+            4, 5 -> radius - 11
+            else -> radius - 11
         }
     }
 
