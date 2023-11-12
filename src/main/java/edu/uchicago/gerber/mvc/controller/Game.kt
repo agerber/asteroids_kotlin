@@ -290,25 +290,14 @@ class Game : Runnable, KeyListener {
         //show the key-code in the console
         //println(nKey)
         when (nKey) {
-            FIRE -> {
-                CommandCenter.opsQueue.enqueue(Bullet(fal), GameOp.Action.ADD)
-                Sound.playSound("thump.wav")
-            }
-
+            FIRE -> CommandCenter.opsQueue.enqueue(Bullet(fal), GameOp.Action.ADD)
             LEFT, RIGHT -> fal.turnState = Falcon.TurnState.IDLE
-
             UP -> {
                 fal.thrusting = false
                 clpThrust.stop()
             }
 
-            NUKE -> {
-                if (CommandCenter.falcon.nukeMeter > 0){
-                    CommandCenter.opsQueue.enqueue(Nuke(fal), GameOp.Action.ADD)
-                    Sound.playSound("nuke.wav")
-                    CommandCenter.falcon.nukeMeter = 0
-                }
-            }
+            NUKE -> CommandCenter.opsQueue.enqueue(Nuke(fal), GameOp.Action.ADD)
 
             MUTE -> {
                 CommandCenter.muted = !CommandCenter.muted

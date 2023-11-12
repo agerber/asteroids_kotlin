@@ -6,7 +6,11 @@ import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
 class WhiteCloudDebris(explodingSprite: Sprite) : Sprite() {
+
+    var index = 0
+
     init {
+
 
         //DEBRIS means that this sprite is inert, and does not interact with other teams.
         team = Team.DEBRIS
@@ -24,7 +28,7 @@ class WhiteCloudDebris(explodingSprite: Sprite) : Sprite() {
         this.rasterMap = rasterMap
 
         //expire it out after it has done its animation.
-        expiry = rasterMap.size
+        expiry = rasterMap.size * 2
 
         //everything is relative to the exploding sprite
         spin = explodingSprite.spin
@@ -41,8 +45,9 @@ class WhiteCloudDebris(explodingSprite: Sprite) : Sprite() {
     //See Falcon class for example of image-state.
     override fun draw(g: Graphics) {
 
-        //we already have a simple decrement-to-zero counter with expiry; see move() method of Sprite
-        val index = rasterMap.size - expiry - 1
         renderRaster((g as Graphics2D), rasterMap[index])
+        //hold the image for two frames to slow down the dust cloud animation
+        //we already have a simple decrement-to-zero counter with expiry; see move() method of Sprite.
+        if (expiry % 2 == 0) index++
     }
 }
