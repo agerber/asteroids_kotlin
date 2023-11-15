@@ -3,17 +3,23 @@ package edu.uchicago.gerber.mvc.controller
 import java.io.BufferedInputStream
 import java.io.IOException
 import java.io.InputStream
+import java.util.concurrent.Executors
+import java.util.concurrent.ThreadPoolExecutor
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.sound.sampled.LineUnavailableException
 import javax.sound.sampled.UnsupportedAudioFileException
 
 object Sound {
+
+     //for sound playing. Limit the number of threads to 5 at a time.
+     val soundExecutor = Executors.newFixedThreadPool(5) as ThreadPoolExecutor
+
     //for individual wav sounds (not looped)
     //http://stackoverflow.com/questions/26305/how-can-i-play-sound-in-java
     fun playSound(strPath: String) {
         //use coroutines here on the io dispatcher
-       CommandCenter.soundExecutor.execute {
+       soundExecutor.execute {
            try {
                val clp = AudioSystem.getClip()
                val audioSrc = Sound::class.java.getResourceAsStream("/sounds/$strPath")
