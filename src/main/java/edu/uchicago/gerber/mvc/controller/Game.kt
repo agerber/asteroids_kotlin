@@ -89,6 +89,8 @@ class Game : Runnable, KeyListener {
             checkCollisions()
             checkNewLevel()
             checkFloaters()
+            //this method will execute add() and remove() callbacks on Movable objects
+            processGameOpsQueue()
             CommandCenter.incrementFrame()
 
             // surround the sleep() in a try/catch block
@@ -146,7 +148,7 @@ class Game : Runnable, KeyListener {
                 CommandCenter.opsQueue.enqueue(movFloater, GameOp.Action.REMOVE)
             }
         }
-        processGameOpsQueue()
+
     }//end meth
 
     private fun processGameOpsQueue() {
