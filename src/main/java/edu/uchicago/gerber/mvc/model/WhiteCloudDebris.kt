@@ -9,8 +9,13 @@ class WhiteCloudDebris(explodingSprite: Sprite) : Sprite() {
 
     var index = 0
 
-    init {
 
+    companion object {
+        //static context. the higher the number, the slower the animation
+        val SLOW_MO = 3
+    }
+
+    init {
 
         //DEBRIS means that this sprite is inert, and does not interact with other teams.
         team = Team.DEBRIS
@@ -27,8 +32,8 @@ class WhiteCloudDebris(explodingSprite: Sprite) : Sprite() {
         rasterMap[8] = loadGraphic("/imgs/exp/row-3-column-3.png")
         this.rasterMap = rasterMap
 
-        //expire it out after it has done its animation.
-        expiry = rasterMap.size * 2
+        //expire it out after it has done its animation. multiply by slow-mo to slow down the animation
+        expiry = rasterMap.size * SLOW_MO
 
         //everything is relative to the exploding sprite
         spin = explodingSprite.spin
@@ -48,6 +53,6 @@ class WhiteCloudDebris(explodingSprite: Sprite) : Sprite() {
         renderRaster((g as Graphics2D), rasterMap[index])
         //hold the image for two frames to slow down the dust cloud animation
         //we already have a simple decrement-to-zero counter with expiry; see move() method of Sprite.
-        if (expiry % 2 == 0) index++
+        if (expiry % SLOW_MO == 0) index++
     }
 }
