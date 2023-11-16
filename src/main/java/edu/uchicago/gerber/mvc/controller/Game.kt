@@ -254,7 +254,9 @@ class Game : Runnable, KeyListener {
             level = level + 1
             CommandCenter.level = level
             spawnBigAsteroids(level)
-            CommandCenter.falcon.shield = Falcon.SPAWN_INIT_VALUE
+            if (CommandCenter.falcon.shield < Falcon.SPAWN_INIT_VALUE)
+                CommandCenter.falcon.shield = Falcon.SPAWN_INIT_VALUE
+
             CommandCenter.falcon.showLevel = Falcon.SPAWN_INIT_VALUE
 
         }
