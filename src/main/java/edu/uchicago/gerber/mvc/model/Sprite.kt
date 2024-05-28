@@ -201,7 +201,8 @@ abstract class Sprite : Movable {
         return img
     }
 
-    //default behavior for adding and removing objects from game space
+    //default behavior for adding and removing objects from game space.
+    //The 'list' parameter will be one of the following: movFriends, movFoes, movDebris, movFloaters.
     override fun addToGame(list: MutableList<Movable>) {
         list.add(this)
     }

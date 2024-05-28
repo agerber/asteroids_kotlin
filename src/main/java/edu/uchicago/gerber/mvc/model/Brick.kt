@@ -46,7 +46,7 @@ class Brick(upperLeftCorner: Point, size: Int) : Sprite() {
 
     override fun removeFromGame(list: MutableList<Movable>) {
         super.removeFromGame(list)
-        CommandCenter.score = CommandCenter.score + 1000
+        CommandCenter.score += 1000
         Sound.playSound("rock.wav")
 
     }
