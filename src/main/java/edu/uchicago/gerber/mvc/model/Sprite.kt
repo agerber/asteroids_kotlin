@@ -202,11 +202,11 @@ abstract class Sprite : Movable {
     }
 
     //default behavior for adding and removing objects from game space
-    override fun add(list: MutableList<Movable>) {
+    override fun addToGame(list: MutableList<Movable>) {
         list.add(this)
     }
 
-   override fun remove(list: MutableList<Movable>) {
+   override fun removeFromGame(list: MutableList<Movable>) {
         list.remove(this)
     }
 

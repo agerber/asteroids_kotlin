@@ -6,7 +6,6 @@ import edu.uchicago.gerber.mvc.model.Movable.Team
 import lombok.Data
 import java.awt.Color
 import java.awt.Graphics
-import java.util.*
 
 @Data
 class Nuke(falcon: Falcon) : Sprite() {
@@ -49,7 +48,7 @@ class Nuke(falcon: Falcon) : Sprite() {
         private const val EXPIRE = 60
     }
 
-    override fun add(list: MutableList<Movable>) {
+    override fun addToGame(list: MutableList<Movable>) {
         if (CommandCenter.falcon.nukeMeter > 0){
             list.add(this)
             Sound.playSound("nuke.wav")
@@ -58,8 +57,8 @@ class Nuke(falcon: Falcon) : Sprite() {
 
     }
 
-    override fun remove(list: MutableList<Movable>) {
-        super.remove(list)
+    override fun removeFromGame(list: MutableList<Movable>) {
+        super.removeFromGame(list)
         //if getExpiry() > 0, then this remove was the result of a collision, rather than natural mortality
         if (expiry == 0)  list.remove(this)
 

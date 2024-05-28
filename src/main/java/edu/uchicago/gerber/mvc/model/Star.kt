@@ -42,11 +42,11 @@ class Star: Movable {
         return Movable.Team.DEBRIS
     }
 
-    override fun add(list: MutableList<Movable>) {
+    override fun addToGame(list: MutableList<Movable>) {
         list.add(this)
     }
 
-    override  fun remove(list: MutableList<Movable>) {
+    override  fun removeFromGame(list: MutableList<Movable>) {
         list.remove(this)
     }
 

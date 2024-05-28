@@ -5,7 +5,6 @@ import edu.uchicago.gerber.mvc.controller.Game
 import edu.uchicago.gerber.mvc.controller.Sound
 import java.awt.Color
 import java.awt.Point
-import java.util.*
 
 class NewWallFloater : Floater() {
 
@@ -18,8 +17,8 @@ class NewWallFloater : Floater() {
         expiry = 230
     }
 
-    override fun remove(list: MutableList<Movable>) {
-        super.remove(list)
+    override fun removeFromGame(list: MutableList<Movable>) {
+        super.removeFromGame(list)
         //if getExpiry() > 0, then this remove was the result of a collision, rather than natural mortality
         if (expiry > 0) {
             Sound.playSound("insect.wav")

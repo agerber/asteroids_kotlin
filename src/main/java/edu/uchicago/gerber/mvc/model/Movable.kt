@@ -2,7 +2,6 @@ package edu.uchicago.gerber.mvc.model
 
 import java.awt.Graphics
 import java.awt.Point
-import java.util.*
 
 interface Movable {
     enum class Team {
@@ -21,8 +20,8 @@ interface Movable {
 
     //callbacks which occur before or after this object is added or removed from the game-space.
     //this is your opportunity to add sounds or perform other side effects, before (add) or after (remove).
-    fun add(list: MutableList<Movable>)
-    fun remove(list: MutableList<Movable>)
+    fun addToGame(list: MutableList<Movable>)
+    fun removeFromGame(list: MutableList<Movable>)
 
 
 } //end Movable

@@ -174,9 +174,9 @@ class Game : Runnable, KeyListener {
             //this block will execute the add() or remove() callbacks in the Movable models.
             val action = gameOp.action
             if (action === GameOp.Action.ADD)
-                mov.add(list)
+                mov.addToGame(list)
             else //REMOVE
-                mov.remove(list)
+                mov.removeFromGame(list)
         } //end while
     }
 

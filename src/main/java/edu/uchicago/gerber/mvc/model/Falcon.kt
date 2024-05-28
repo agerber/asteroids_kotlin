@@ -157,7 +157,7 @@ class Falcon : Sprite() {
 
 
 
-     override fun remove(list: MutableList<Movable>) {
+     override fun removeFromGame(list: MutableList<Movable>) {
          //The falcon is never actually removed from the game-space; instead we decrement numFalcons
          //only execute the decrementFalconNumAndSpawn() method if shield is down.
          if (shield == 0) decrementFalconNumAndSpawn()

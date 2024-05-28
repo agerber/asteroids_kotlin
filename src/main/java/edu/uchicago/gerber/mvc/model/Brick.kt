@@ -44,8 +44,8 @@ class Brick(upperLeftCorner: Point, size: Int) : Sprite() {
         //do NOT call super.move() and do nothing, a brick does not move.
     }
 
-    override fun remove(list: MutableList<Movable>) {
-        super.remove(list)
+    override fun removeFromGame(list: MutableList<Movable>) {
+        super.removeFromGame(list)
         CommandCenter.score = CommandCenter.score + 1000
         Sound.playSound("rock.wav")
 

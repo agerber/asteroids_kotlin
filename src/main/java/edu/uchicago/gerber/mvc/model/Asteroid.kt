@@ -7,7 +7,6 @@ import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Point
-import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Supplier
 import java.util.stream.Collectors
@@ -104,8 +103,8 @@ class Asteroid(size: Int) : Sprite() {
         renderVector(g)
     }
 
-    override fun remove(list: MutableList<Movable>) {
-        super.remove(list)
+    override fun removeFromGame(list: MutableList<Movable>) {
+        super.removeFromGame(list)
         spawnSmallerAsteroidsOrDebris(this)
         CommandCenter.score = CommandCenter.score + 10L * (size + 1)
         Sound.playSound("kapow.wav")

@@ -53,8 +53,8 @@ class Bullet(falcon: Falcon) : Sprite() {
         renderVector(g)
     }
 
-    override fun add(list: MutableList<Movable>) {
-        super.add(list)
+    override fun addToGame(list: MutableList<Movable>) {
+        super.addToGame(list)
         Sound.playSound("thump.wav")
 
     }
