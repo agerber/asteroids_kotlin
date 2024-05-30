@@ -107,7 +107,11 @@ class Asteroid(size: Int) : Sprite() {
         super.removeFromGame(list)
         spawnSmallerAsteroidsOrDebris(this)
         CommandCenter.score = CommandCenter.score + 10L * (size + 1)
-        Sound.playSound("kapow.wav")
+        //if large (0) or medium (1) asteroid
+        if (size < 2)
+            Sound.playSound("kapow.wav");
+        else //small (2) asteroid
+            Sound.playSound("pillow.wav");
 
     }
 
