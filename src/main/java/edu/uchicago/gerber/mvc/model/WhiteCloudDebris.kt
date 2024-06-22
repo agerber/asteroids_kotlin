@@ -1,5 +1,6 @@
 package edu.uchicago.gerber.mvc.model
 
+import edu.uchicago.gerber.mvc.controller.ImageLoader
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Graphics
 import java.awt.Graphics2D
@@ -21,15 +22,16 @@ class WhiteCloudDebris(explodingSprite: Sprite) : Sprite() {
         team = Team.DEBRIS
         val rasterMap: MutableMap<Any, BufferedImage?> = HashMap()
         //see readme.txt file in the resources/imgs/exp directory for how I created these assets
-        rasterMap[0] = loadGraphic("/imgs/exp/row-1-column-1.png")
-        rasterMap[1] = loadGraphic("/imgs/exp/row-1-column-2.png")
-        rasterMap[2] = loadGraphic("/imgs/exp/row-1-column-3.png")
-        rasterMap[3] = loadGraphic("/imgs/exp/row-2-column-1.png")
-        rasterMap[4] = loadGraphic("/imgs/exp/row-2-column-2.png")
-        rasterMap[5] = loadGraphic("/imgs/exp/row-2-column-3.png")
-        rasterMap[6] = loadGraphic("/imgs/exp/row-3-column-1.png")
-        rasterMap[7] = loadGraphic("/imgs/exp/row-3-column-2.png")
-        rasterMap[8] = loadGraphic("/imgs/exp/row-3-column-3.png")
+        //see readme.txt file in the resources/imgs/exp directory for how I created these assets
+        rasterMap[0] = ImageLoader.IMAGES!!["row-1-column-1.png"]
+        rasterMap[1] = ImageLoader.IMAGES!!["row-1-column-2.png"]
+        rasterMap[2] = ImageLoader.IMAGES!!["row-1-column-3.png"]
+        rasterMap[3] = ImageLoader.IMAGES!!["row-2-column-1.png"]
+        rasterMap[4] = ImageLoader.IMAGES!!["row-2-column-2.png"]
+        rasterMap[5] = ImageLoader.IMAGES!!["row-2-column-3.png"]
+        rasterMap[6] = ImageLoader.IMAGES!!["row-3-column-1.png"]
+        rasterMap[7] = ImageLoader.IMAGES!!["row-3-column-2.png"]
+        rasterMap[8] = ImageLoader.IMAGES!!["row-3-column-3.png"]
         this.rasterMap = rasterMap
 
         //expire it out after it has done its animation. multiply by slow-mo to slow down the animation

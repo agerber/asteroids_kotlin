@@ -1,13 +1,13 @@
 package edu.uchicago.gerber.mvc.model
 
 import edu.uchicago.gerber.mvc.controller.CommandCenter
+import edu.uchicago.gerber.mvc.controller.ImageLoader
 import edu.uchicago.gerber.mvc.controller.Sound
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.image.BufferedImage
-import java.util.*
 
 class Brick(upperLeftCorner: Point, size: Int) : Sprite() {
     companion object{
@@ -27,7 +27,8 @@ class Brick(upperLeftCorner: Point, size: Int) : Sprite() {
         //since we already have a rasterMap in the Sprite class, we might as well be consistent for all raster sprites
         // and use it.
         val rasterMap: MutableMap<Any, BufferedImage?> = HashMap()
-        rasterMap.put(BRICK_IMAGE, loadGraphic("/imgs/brick/Brick_Block100.png"))
+        //brick from Mario Bros
+        rasterMap[BRICK_IMAGE] = ImageLoader.IMAGES!!["Brick_Block100.png"]
         this.rasterMap = rasterMap
     }
 

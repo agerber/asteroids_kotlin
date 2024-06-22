@@ -9,6 +9,7 @@ import java.awt.Point
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.util.*
+import java.util.function.Consumer
 import javax.sound.sampled.Clip
 
 fun main() {
@@ -23,9 +24,6 @@ class Game : Runnable, KeyListener {
     private val gmpPanel: GamePanel
     private val animationThread: Thread
 
-    //sounds
-    private val clpThrust: Clip
-    private val clpMusicBackground: Clip
 
     //STATIC CONTEXT
     companion object {
@@ -65,9 +63,6 @@ class Game : Runnable, KeyListener {
     init {
         gmpPanel = GamePanel(DIM)
         gmpPanel.addKeyListener(this) //Game object implements KeyListener
-        clpThrust = Sound.clipForLoopFactory("whitenoise.wav")
-        clpMusicBackground = Sound.clipForLoopFactory("music-background.wav")
-
         //fire up the animation thread
         animationThread = Thread(this) // pass the animation thread a runnable object, the Game object
         animationThread.start()
@@ -272,13 +267,14 @@ class Game : Runnable, KeyListener {
         when (nKey) {
             PAUSE -> {
                 CommandCenter.paused = !CommandCenter.paused
-                if (CommandCenter.paused) stopLoopingSounds(clpMusicBackground, clpThrust)
+                if (CommandCenter.paused) stopLoopingSounds()
             }
 
             QUIT -> System.exit(0)
             UP -> {
                 fal.thrusting = true
-                if (!CommandCenter.paused && !CommandCenter.isGameOver()) clpThrust.loop(Clip.LOOP_CONTINUOUSLY)
+                if (!CommandCenter.paused && !CommandCenter.isGameOver()) Sound.LOOP_SOUNDS!!["whitenoise_loop.wav"]!!
+                    .loop(Clip.LOOP_CONTINUOUSLY)
             }
 
             LEFT -> fal.turnState = Falcon.TurnState.LEFT
@@ -298,7 +294,7 @@ class Game : Runnable, KeyListener {
             LEFT, RIGHT -> fal.turnState = Falcon.TurnState.IDLE
             UP -> {
                 fal.thrusting = false
-                clpThrust.stop()
+                Sound.LOOP_SOUNDS!!["whitenoise_loop.wav"]!!.stop()
             }
 
             NUKE -> CommandCenter.opsQueue.enqueue(Nuke(fal), GameOp.Action.ADD)
@@ -306,9 +302,9 @@ class Game : Runnable, KeyListener {
             MUTE -> {
                 CommandCenter.muted = !CommandCenter.muted
                 if (!CommandCenter.muted) {
-                    stopLoopingSounds(clpMusicBackground)
+                    stopLoopingSounds()
                 } else {
-                    clpMusicBackground.loop(Clip.LOOP_CONTINUOUSLY)
+                    Sound.LOOP_SOUNDS!!["music-background_loop.wav"]!!.loop(Clip.LOOP_CONTINUOUSLY)
                 }
 
             }
@@ -320,10 +316,12 @@ class Game : Runnable, KeyListener {
     override fun keyTyped(e: KeyEvent) {}
 
     //utility method for stop looping sounds.
-    private fun stopLoopingSounds(vararg clpClips: Clip) {
-        for (clp in clpClips) {
-            clp.stop()
-        }
+    private fun stopLoopingSounds() {
+        val keys = Sound.LOOP_SOUNDS!!.keys
+        keys.forEach(Consumer { key: String? ->
+            Sound.LOOP_SOUNDS!![key!!]!!
+                .stop()
+        })
     }
 
 

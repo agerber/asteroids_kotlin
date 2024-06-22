@@ -2,6 +2,7 @@ package edu.uchicago.gerber.mvc.model
 
 import edu.uchicago.gerber.mvc.controller.CommandCenter
 import edu.uchicago.gerber.mvc.controller.Game
+import edu.uchicago.gerber.mvc.controller.ImageLoader
 import edu.uchicago.gerber.mvc.controller.Sound
 import edu.uchicago.gerber.mvc.model.Movable.Team
 import java.awt.Color
@@ -9,8 +10,6 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.image.BufferedImage
-import java.util.*
-import kotlin.collections.HashMap
 
 
 class Falcon : Sprite() {
@@ -57,12 +56,13 @@ class Falcon : Sprite() {
         //this is the size (radius) of the falcon
         radius = MIN_RADIUS
 
-        val rasterMap: MutableMap<Any, BufferedImage?> = HashMap()
-        rasterMap[ImageState.FALCON] = loadGraphic("/imgs/fal/falcon125.png")
-        rasterMap[ImageState.FALCON_THR] = loadGraphic("/imgs/fal/falcon125_thr.png")
-        rasterMap[ImageState.FALCON_PRO] = loadGraphic("/imgs/fal/falcon125_PRO.png")
-        rasterMap[ImageState.FALCON_PRO_THR] = loadGraphic("/imgs/fal/falcon125_PRO_thr.png")
-        rasterMap[ImageState.FALCON_INVISIBLE] = null
+         val rasterMap: MutableMap<Any, BufferedImage?> = HashMap()
+         rasterMap[ImageState.FALCON_INVISIBLE] = null
+         rasterMap[ImageState.FALCON] = ImageLoader.IMAGES!!["falcon125.png"] //normal ship
+         rasterMap[ImageState.FALCON_THR] = ImageLoader.IMAGES!!["falcon125_thr.png"] //normal ship thrusting
+         rasterMap[ImageState.FALCON_PRO] = ImageLoader.IMAGES!!["falcon125_PRO.png"] //protected ship (cyan)
+         rasterMap[ImageState.FALCON_PRO_THR] = ImageLoader.IMAGES!!["falcon125_PRO_thr.png"] //cyan thrusting
+
         this.rasterMap = rasterMap
 
     }
