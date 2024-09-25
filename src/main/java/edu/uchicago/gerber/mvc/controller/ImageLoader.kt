@@ -43,7 +43,7 @@ object ImageLoader {
                         if (bufferedImage != null) {
                             //substring(18) removes "src/main/resources" so that keys/paths are consistent with
                             // static and non-static
-                            pngImages[file.toString().lowercase(Locale.getDefault()).substring(18)] = bufferedImage
+                            pngImages[file.toString().lowercase(Locale.getDefault()).substring(18).replace("\\", "/")] = bufferedImage
                         }
                     } catch (e: IOException) {
                         e.fillInStackTrace()
